@@ -24,7 +24,7 @@ If a feature isn't explicitly in `SPRINT_PLAN.md`, **do not build it**. Ask firs
 | Decision | Choice |
 |---|---|
 | Frontend | React 18 + TypeScript + Vite |
-| Styling | Tailwind CSS (use `axia` color tokens) |
+| Styling | Tailwind CSS — see `BRAND.md` for color tokens, typography, and motion |
 | State | Zustand (no Redux) |
 | Data fetching | TanStack Query |
 | Editor | TipTap (JSON in `appraisals.document_content`) |
