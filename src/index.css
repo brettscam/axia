@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  /* Axia color tokens */
+  --color-axia-navy: #1a1a2e;
+  --color-axia-slate: #4a5568;
+  --color-axia-blue: #3b82f6;
+  --color-axia-emerald: #10b981;
+  --color-axia-amber: #f59e0b;
+  --color-axia-snow: #f8fafc;
+
+  /* Font families */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
