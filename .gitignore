@@ -21,3 +21,7 @@ dist
 # Logs
 *.log
 npm-debug.log*
+
+# Agent skills (fetched per-machine)
+.agents/
+.claude/skills/

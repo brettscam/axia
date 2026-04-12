@@ -71,3 +71,8 @@ Each entry:
 - **Context**: CLAUDE.md specifies Inter and JetBrains Mono font families but doesn't specify how to load them.
 - **Decision**: Load via Google Fonts `<link>` tags in `index.html` for simplicity. No self-hosted fonts for MVP.
 - **Assumptions to verify**: Google Fonts availability is acceptable for the MVP (no offline requirement).
+
+### 2026-04-12 — Supabase project connected
+- **Context**: Supabase project provisioned at `lryltfufrceraizdxkwx.supabase.co`. Vercel domain: `axia-mu.vercel.app`.
+- **Decision**: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` stored in `.env.local` (gitignored). Supabase agent skills installed via `npx skills add supabase/agent-skills`.
+- **Assumptions to verify**: Anon key has correct RLS-gated permissions once schema is applied.
