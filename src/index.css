@@ -1,22 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Axia color tokens */
-  --color-axia-navy: #1a1a2e;
-  --color-axia-slate: #4a5568;
-  --color-axia-blue: #3b82f6;
-  --color-axia-emerald: #10b981;
-  --color-axia-amber: #f59e0b;
-  --color-axia-snow: #f8fafc;
+  /* Axia brand colors — source of truth: BRAND.md + src/brand/tokens.ts */
+  --color-ink: #0B1E3F;
+  --color-gold: #C9A961;
+  --color-sage: #4A6B5C;
+  --color-flag: #B54548;
+  --color-parchment: #F7F5F0;
+  --color-slate: #1F2937;
+  --color-fog: #6B7280;
+  --color-gold-tint: rgba(201, 169, 97, 0.15);
+  --color-sage-tint: rgba(74, 107, 92, 0.15);
 
   /* Font families */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
+  background: var(--color-parchment);
+  color: var(--color-slate);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

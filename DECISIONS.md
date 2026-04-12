@@ -76,3 +76,19 @@ Each entry:
 - **Context**: Supabase project provisioned at `lryltfufrceraizdxkwx.supabase.co`. Vercel domain: `axia-mu.vercel.app`.
 - **Decision**: `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` stored in `.env.local` (gitignored). Supabase agent skills installed via `npx skills add supabase/agent-skills`.
 - **Assumptions to verify**: Anon key has correct RLS-gated permissions once schema is applied.
+
+### 2026-04-12 — Brand system replaces original CLAUDE.md color tokens
+- **Context**: User provided complete brand package (BRAND.md + src/brand/) with a refined color system. The original CLAUDE.md tokens (navy, blue, emerald, amber, snow) are superseded by the brand system (ink, gold, sage, flag, parchment, fog).
+- **Decision**: BRAND.md is now the source of truth for visual identity. Tailwind @theme tokens updated to match. Old `axia-*` prefixed tokens removed. Colors have strict semantic rules: gold = AI-generated content only, sage = verified/success only, flag = errors only.
+- **Alternatives considered**: Keeping both systems (rejected: conflicting tokens would cause confusion).
+- **Assumptions to verify**: CLAUDE.md section 2 still says "use `axia` color tokens" — this now means the BRAND.md token set. Should CLAUDE.md be updated to reference BRAND.md?
+
+### 2026-04-12 — Fraunces added as display font
+- **Context**: Brand system specifies Fraunces (variable serif) for headings and property addresses, replacing the previous Inter-only setup.
+- **Decision**: Added Fraunces via Google Fonts alongside Inter and JetBrains Mono. Font weights restricted to 400 and 500 only per BRAND.md. Tailwind `--font-display` token added.
+- **Assumptions to verify**: None.
+
+### 2026-04-12 — Logo.tsx is a stub pending final SVGs
+- **Context**: Brand package specifies `axia-mark.svg` and `axia-mark-mono.svg` but raw SVG files were not provided.
+- **Decision**: Logo.tsx renders the house-mark inline SVG derived from the motion system (matches the screenshots). Three variants (color, mono, inverted) work. Replace with final assets when provided.
+- **Assumptions to verify**: Current inline SVG matches the intended logo design.

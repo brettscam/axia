@@ -1,0 +1,85 @@
+/* Axia motion system — all brand animations derive from the core mark */
+
+/* 1. LOADING: continuous outline trace */
+@keyframes axia-trace {
+  0%   { stroke-dashoffset: 600; }
+  50%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -600; }
+}
+.axia-anim-trace {
+  stroke-dasharray: 600;
+  animation: axia-trace 2.4s linear infinite;
+}
+
+/* 2. AI THINKING: inner lines scale/pulse */
+@keyframes axia-scan-1 {
+  0%, 100% { transform: scaleX(0.3); opacity: 0.4; }
+  50%      { transform: scaleX(1);   opacity: 1; }
+}
+@keyframes axia-scan-2 {
+  0%, 100% { transform: scaleX(0.2); opacity: 0.4; }
+  50%      { transform: scaleX(0.8); opacity: 1; }
+}
+.axia-anim-scan-1 {
+  animation: axia-scan-1 1.6s ease-in-out infinite;
+  transform-origin: 45px 72px;
+  transform-box: fill-box;
+}
+.axia-anim-scan-2 {
+  animation: axia-scan-2 1.6s ease-in-out infinite 0.2s;
+  transform-origin: 45px 90px;
+  transform-box: fill-box;
+}
+
+/* 3. SUCCESS: pulse + check draw */
+@keyframes axia-success-pulse {
+  0%, 100% { transform: scale(1); }
+  30%      { transform: scale(1.08); }
+}
+@keyframes axia-check-draw {
+  0%   { stroke-dashoffset: 40; }
+  100% { stroke-dashoffset: 0; }
+}
+.axia-anim-success {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: axia-success-pulse 1.8s ease-out infinite;
+}
+.axia-anim-check {
+  stroke-dasharray: 40;
+  animation: axia-check-draw 0.6s 0.2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* 4. DATA SYNC: shuttle lines across */
+@keyframes axia-shuttle {
+  0%   { transform: translateX(-40px); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(0);     opacity: 0; }
+}
+.axia-anim-shuttle-1 { animation: axia-shuttle 1.8s ease-in-out infinite; }
+.axia-anim-shuttle-2 { animation: axia-shuttle 1.8s ease-in-out infinite 0.25s; }
+
+/* 5. STEPPED PROGRESS: three-dot pulse */
+@keyframes axia-dot-pulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.3; }
+  50%      { transform: scale(1);   opacity: 1; }
+}
+.axia-dot-1 { animation: axia-dot-pulse 1.2s ease-in-out infinite;       transform-origin: center; transform-box: fill-box; }
+.axia-dot-2 { animation: axia-dot-pulse 1.2s ease-in-out infinite 0.2s;  transform-origin: center; transform-box: fill-box; }
+.axia-dot-3 { animation: axia-dot-pulse 1.2s ease-in-out infinite 0.4s;  transform-origin: center; transform-box: fill-box; }
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .axia-anim-trace,
+  .axia-anim-scan-1,
+  .axia-anim-scan-2,
+  .axia-anim-success,
+  .axia-anim-shuttle-1,
+  .axia-anim-shuttle-2,
+  .axia-dot-1,
+  .axia-dot-2,
+  .axia-dot-3 {
+    animation: none;
+  }
+}
