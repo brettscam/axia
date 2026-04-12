@@ -1,0 +1,39 @@
+.tiptap-editor .ProseMirror {
+  outline: none;
+  min-height: 500px;
+}
+
+.tiptap-editor .ProseMirror p {
+  margin: 0.75em 0;
+}
+
+.tiptap-editor .ProseMirror h1,
+.tiptap-editor .ProseMirror h2 {
+  font-family: var(--font-display);
+}
+
+.tiptap-editor .ProseMirror h1 {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 1.5em 0 0.5em;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 1.25em 0 0.5em;
+}
+
+.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.tiptap-editor .ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.tiptap-editor .ProseMirror:focus {
+  outline: none;
+}
