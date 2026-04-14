@@ -8,6 +8,8 @@ import { useAutoSave } from './useAutoSave';
 import { SubjectPropertyForm } from './SubjectPropertyForm';
 import { SectionNav } from './SectionNav';
 import { VersionHistoryDropdown } from './VersionHistoryDropdown';
+import { AiDescriptionPanel } from '@/features/ai/AiDescriptionPanel';
+import { useGenerateDescription } from '@/features/ai/useGenerateDescription';
 import './editor.css';
 
 function SaveStatus({ saving, lastSaved }: { saving: boolean; lastSaved: Date | null }) {
@@ -62,6 +64,7 @@ export function EditorPage() {
   const { data: appraisal, isLoading, error } = useAppraisal(id ?? '');
   const [content, setContent] = useState<JSONContent | undefined>(undefined);
   const [activeSection, setActiveSection] = useState('subject');
+  const { generate, generating, generatedText, error: aiError, reset: resetAi, updateUserAction } = useGenerateDescription();
 
   const editor = useEditor(
     {
@@ -144,6 +147,58 @@ export function EditorPage() {
             }}
           />
         </div>
+
+        {/* AI description generator */}
+        <AiDescriptionPanel
+          generating={generating}
+          generatedText={generatedText}
+          error={aiError}
+          hasSubjectData={!!(appraisal.property_address || appraisal.bedrooms || appraisal.gla)}
+          onGenerate={() => {
+            void generate({
+              appraisal_id: id ?? '',
+              property_address: appraisal.property_address,
+              property_city: appraisal.property_city,
+              property_state: appraisal.property_state,
+              property_zip: appraisal.property_zip,
+              property_type: appraisal.property_type,
+              bedrooms: appraisal.bedrooms,
+              bathrooms: appraisal.bathrooms,
+              gla: appraisal.gla,
+              lot_size: appraisal.lot_size,
+              year_built: appraisal.year_built,
+              condition: appraisal.condition,
+            });
+          }}
+          onAccept={() => {
+            if (generatedText && editor) {
+              editor.chain().focus().insertContent(`<p>${generatedText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`).run();
+              void updateUserAction(id ?? '', 'accepted');
+              resetAi();
+            }
+          }}
+          onReject={() => {
+            void updateUserAction(id ?? '', 'rejected');
+            resetAi();
+          }}
+          onRegenerate={() => {
+            void updateUserAction(id ?? '', 'regenerated');
+            void generate({
+              appraisal_id: id ?? '',
+              property_address: appraisal.property_address,
+              property_city: appraisal.property_city,
+              property_state: appraisal.property_state,
+              property_zip: appraisal.property_zip,
+              property_type: appraisal.property_type,
+              bedrooms: appraisal.bedrooms,
+              bathrooms: appraisal.bathrooms,
+              gla: appraisal.gla,
+              lot_size: appraisal.lot_size,
+              year_built: appraisal.year_built,
+              condition: appraisal.condition,
+            });
+          }}
+        />
 
         {/* TipTap editor */}
         <div id="section-neighborhood" className="bg-white border border-fog/20 rounded-[12px] p-8 min-h-[600px]">
