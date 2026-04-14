@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useUpdateAppraisal } from './useUpdateAppraisal';
+import { usePropertyLookup } from './usePropertyLookup';
 
 const DEBOUNCE_MS = 1_000;
 
@@ -54,6 +55,7 @@ export function SubjectPropertyForm({ appraisalId, initialData }: Props) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const { mutateAsync } = useUpdateAppraisal();
+  const { lookup, looking, error: lookupError } = usePropertyLookup();
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestFormDataRef = useRef<FormData>(formData);
   const appraisalIdRef = useRef(appraisalId);
@@ -117,6 +119,29 @@ export function SubjectPropertyForm({ appraisalId, initialData }: Props) {
     scheduleAutoSave();
   }
 
+  async function handlePropertyLookup() {
+    const address = formData.property_address;
+    if (!address) return;
+    const result = await lookup(
+      address,
+      formData.property_city ?? undefined,
+      formData.property_state ?? undefined,
+      formData.property_zip ?? undefined,
+    );
+    if (result) {
+      // Merge: only overwrite fields that ATTOM returned non-null
+      const merged: FormData = { ...formData };
+      for (const key of Object.keys(result) as (keyof typeof result)[]) {
+        if (result[key] !== null && result[key] !== undefined) {
+          (merged as Record<string, unknown>)[key] = result[key];
+        }
+      }
+      setFormData(merged);
+      setSaveStatus('idle');
+      scheduleAutoSave();
+    }
+  }
+
   return (
     <div className="bg-white border border-fog/20 rounded-[12px] mb-6">
       <button
@@ -139,15 +164,30 @@ export function SubjectPropertyForm({ appraisalId, initialData }: Props) {
       {isOpen && (
         <div className="px-6 pb-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            {/* Property address — full width */}
+            {/* Property address — full width with lookup button */}
             <div className="md:col-span-2">
               <label className={labelClass}>Property address</label>
-              <input
-                type="text"
-                className={inputClass}
-                value={formData.property_address ?? ''}
-                onChange={(e) => handleTextChange('property_address', e.target.value)}
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={formData.property_address ?? ''}
+                  onChange={(e) => handleTextChange('property_address', e.target.value)}
+                  placeholder="Enter address to auto-populate property data"
+                />
+                <button
+                  type="button"
+                  onClick={() => void handlePropertyLookup()}
+                  disabled={looking || !formData.property_address}
+                  className="flex shrink-0 items-center gap-1.5 rounded-[8px] bg-ink px-4 py-2 text-sm font-medium text-parchment transition-colors hover:bg-slate disabled:opacity-40"
+                >
+                  <Search size={14} />
+                  <span>{looking ? 'Looking up...' : 'Lookup'}</span>
+                </button>
+              </div>
+              {lookupError && (
+                <p className="mt-1.5 text-sm text-flag">{lookupError}</p>
+              )}
             </div>
 
             {/* City, State, Zip — 3-column row */}
