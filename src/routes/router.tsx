@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { AuthForm } from '@/features/auth/AuthForm';
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { AppShell } from '@/components/ui/AppShell';
+import { AppraisalsListView } from '@/features/appraisal/AppraisalsListView';
 
 export const router = createBrowserRouter([
   {
@@ -17,11 +18,7 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <div className="flex items-center justify-center h-full text-fog">
-                Select an appraisal or create a new one
-              </div>
-            ),
+            element: <AppraisalsListView />,
           },
           {
             path: 'appraisals/:id',
