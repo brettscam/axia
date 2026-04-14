@@ -48,7 +48,7 @@ function formatPricePerSqft(price: number, sqft: number): string {
 
 function matchColor(score: number): { text: string; bg: string } {
   if (score >= 85) return { text: 'text-sage', bg: 'bg-sage' };
-  if (score >= 70) return { text: 'text-amber-600', bg: 'bg-amber-500' };
+  if (score >= 70) return { text: 'text-gold', bg: 'bg-gold' };
   return { text: 'text-flag', bg: 'bg-flag' };
 }
 
