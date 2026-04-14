@@ -6,6 +6,7 @@ import { Dashboard } from '@/features/dashboard/Dashboard';
 import { PropertyInputPage } from '@/pages/PropertyInputPage';
 import { CompSelectionPage } from '@/pages/CompSelectionPage';
 import { ReportsPage } from '@/pages/ReportsPage';
+import { AppraisalsListView } from '@/features/appraisal/AppraisalsListView';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
             element: <Dashboard />,
           },
           {
+            path: 'appraisals',
+            element: <AppraisalsListView />,
+          },
+          {
             path: 'appraisals/:id',
             lazy: async () => {
               const { EditorPage } = await import('@/features/appraisal/EditorPage');
@@ -31,22 +36,22 @@ export const router = createBrowserRouter([
             },
           },
           {
-            path: 'property',
+            path: 'property/:id?',
             element: <PropertyInputPage />,
           },
           {
-            path: 'comps',
+            path: 'comps/:id?',
             element: <CompSelectionPage />,
           },
           {
-            path: 'adjustments',
+            path: 'adjustments/:id?',
             lazy: async () => {
               const { AdjustmentsPage } = await import('@/pages/AdjustmentsPage');
               return { Component: AdjustmentsPage };
             },
           },
           {
-            path: 'report',
+            path: 'report/:id?',
             element: <ReportsPage />,
           },
         ],

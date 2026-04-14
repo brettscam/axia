@@ -1,23 +1,32 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppraisalProgress } from '@/components/ui/AppraisalProgress';
 import { useAppraisal } from '@/features/appraisal/useAppraisal';
 
-const STORAGE_KEY = 'axia_current_appraisal_id';
-
-function getStoredAppraisalId(): string | null {
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
 export function ReportsPage() {
   const navigate = useNavigate();
-  const [appraisalId] = useState<string | null>(() => getStoredAppraisalId());
-  const { data: appraisal, isLoading, error } = useAppraisal(appraisalId ?? '');
+  const { id } = useParams<{ id: string }>();
+  const { data: appraisal, isLoading, error } = useAppraisal(id ?? '');
   const [tooltipVisible, setTooltipVisible] = useState(false);
+
+  // No appraisal ID in URL
+  if (!id) {
+    return (
+      <div>
+        <AppraisalProgress currentStep={4} />
+        <div className="flex flex-col items-center justify-center rounded-[12px] border border-fog/20 bg-white py-16">
+          <p className="text-fog">Select an appraisal from the dashboard to get started.</p>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="mt-4 rounded-[8px] bg-ink px-4 py-2 text-sm font-medium text-parchment transition-colors hover:bg-slate"
+          >
+            Go to dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Loading
   if (isLoading) {
@@ -137,7 +146,7 @@ export function ReportsPage() {
       <div className="flex items-center justify-between">
         <button
           type="button"
-          onClick={() => navigate('/adjustments')}
+          onClick={() => navigate(`/adjustments/${id}`)}
           className="rounded-[8px] border border-fog/20 bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-parchment"
         >
           Back to adjustments
