@@ -1,12 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AppraisalProgress } from '@/components/ui/AppraisalProgress';
 import { SubjectPropertyForm } from '@/features/appraisal/SubjectPropertyForm';
 import { useAppraisal } from '@/features/appraisal/useAppraisal';
 import { useUpdateAppraisal } from '@/features/appraisal/useUpdateAppraisal';
 import { useCreateAppraisal } from '@/features/appraisal/useAppraisals';
-
-const STORAGE_KEY = 'axia_current_appraisal_id';
 
 const SAMPLE_DATA = {
   property_address: '560 N San Pedro Rd',
@@ -22,49 +20,24 @@ const SAMPLE_DATA = {
   condition: 'good',
 } as const;
 
-function getStoredAppraisalId(): string | null {
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function setStoredAppraisalId(id: string): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, id);
-  } catch {
-    // Silent — localStorage unavailable
-  }
-}
-
 export function PropertyInputPage() {
   const navigate = useNavigate();
-  const [appraisalId, setAppraisalId] = useState<string | null>(
-    () => getStoredAppraisalId(),
-  );
+  const { id: appraisalId } = useParams<{ id: string }>();
 
   const { data: appraisal, isLoading, error } = useAppraisal(appraisalId ?? '');
   const { mutateAsync: updateAppraisal, isPending: isSaving } = useUpdateAppraisal();
   const createAppraisal = useCreateAppraisal();
-
-  // Persist appraisalId to localStorage when it changes
-  useEffect(() => {
-    if (appraisalId) {
-      setStoredAppraisalId(appraisalId);
-    }
-  }, [appraisalId]);
 
   const handleCreateAndLoad = useCallback(() => {
     createAppraisal.mutate(
       { property_address: '', client_name: '' },
       {
         onSuccess: (data) => {
-          setAppraisalId(data.id);
+          navigate(`/property/${data.id}`, { replace: true });
         },
       },
     );
-  }, [createAppraisal]);
+  }, [createAppraisal, navigate]);
 
   async function handleLoadSample() {
     if (!appraisalId) {
@@ -73,7 +46,7 @@ export function PropertyInputPage() {
         { property_address: SAMPLE_DATA.property_address, client_name: '' },
         {
           onSuccess: async (data) => {
-            setAppraisalId(data.id);
+            navigate(`/property/${data.id}`, { replace: true });
             await updateAppraisal({
               id: data.id,
               data: { ...SAMPLE_DATA },
@@ -215,7 +188,8 @@ export function PropertyInputPage() {
         </button>
         <button
           type="button"
-          onClick={() => navigate('/comps')}
+          onClick={() => navigate(`/comps/${appraisalId}`)}
+
           className="rounded-[8px] bg-ink px-4 py-2 text-sm font-medium text-parchment transition-colors hover:bg-slate"
         >
           Continue to comps

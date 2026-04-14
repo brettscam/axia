@@ -9,7 +9,6 @@ import {
   ArrowUpRight,
   Search,
   Calculator,
-  BarChart3,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useAppraisals, useCreateAppraisal } from '@/features/appraisal/useAppraisals';
@@ -314,7 +313,7 @@ export function Dashboard() {
       {/* Section 4: Quick actions */}
       <div>
         <h2 className="mb-4 font-display text-lg font-medium text-ink">Quick actions</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <ActionCard
             title="Property input"
             description="Enter subject property details"
@@ -332,12 +331,6 @@ export function Dashboard() {
             description="Review and apply comp adjustments"
             icon={<Calculator size={18} className="text-ink" />}
             to="/adjustments"
-          />
-          <ActionCard
-            title="Market analysis"
-            description="Analyze local market conditions"
-            icon={<BarChart3 size={18} className="text-ink" />}
-            to="/analysis"
           />
         </div>
       </div>

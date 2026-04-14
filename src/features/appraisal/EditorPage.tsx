@@ -113,11 +113,14 @@ export function EditorPage() {
     <div className="flex gap-6">
       {/* Section navigation */}
       <div className="hidden lg:block w-44 shrink-0 pt-2">
-        <SectionNav activeSection={activeSection} onSectionClick={setActiveSection} />
+        <SectionNav activeSection={activeSection} onSectionClick={(section) => {
+          setActiveSection(section);
+          document.getElementById(`section-${section}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }} />
       </div>
 
       {/* Main editor area */}
-      <div className="flex-1 max-w-3xl">
+      <div className="flex-1 max-w-3xl space-y-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="font-display text-[22px] font-medium text-ink">
             {appraisal.property_address || 'Untitled appraisal'}
@@ -206,6 +209,27 @@ export function EditorPage() {
           <div className="tiptap-editor font-sans text-slate text-base leading-relaxed">
             <EditorContent editor={editor} />
           </div>
+        </div>
+
+        {/* Placeholder sections for navigation targets */}
+        <div id="section-site" className="rounded-[12px] border border-fog/20 bg-white p-8">
+          <h2 className="font-display text-lg font-medium text-ink">Site</h2>
+          <p className="mt-2 text-sm text-fog">Site analysis will appear here.</p>
+        </div>
+
+        <div id="section-comparables" className="rounded-[12px] border border-fog/20 bg-white p-8">
+          <h2 className="font-display text-lg font-medium text-ink">Comparables</h2>
+          <p className="mt-2 text-sm text-fog">Comparable sales data will appear here.</p>
+        </div>
+
+        <div id="section-adjustments" className="rounded-[12px] border border-fog/20 bg-white p-8">
+          <h2 className="font-display text-lg font-medium text-ink">Adjustments</h2>
+          <p className="mt-2 text-sm text-fog">Adjustment analysis will appear here.</p>
+        </div>
+
+        <div id="section-reconciliation" className="rounded-[12px] border border-fog/20 bg-white p-8">
+          <h2 className="font-display text-lg font-medium text-ink">Reconciliation</h2>
+          <p className="mt-2 text-sm text-fog">Value reconciliation will appear here.</p>
         </div>
       </div>
     </div>
