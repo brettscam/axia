@@ -40,7 +40,7 @@ export function AdjustmentsPage() {
         </button>
         <button
           type="button"
-          onClick={() => void navigate(1)}
+          onClick={() => void navigate('/report')}
           className="flex items-center gap-1.5 rounded-[8px] bg-ink px-4 py-2.5 text-sm font-medium text-parchment transition-colors hover:bg-ink/90"
         >
           Continue to report
