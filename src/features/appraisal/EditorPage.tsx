@@ -5,6 +5,9 @@ import StarterKit from '@tiptap/starter-kit';
 import type { JSONContent, Editor } from '@tiptap/react';
 import { useAppraisal } from './useAppraisal';
 import { useAutoSave } from './useAutoSave';
+import { SubjectPropertyForm } from './SubjectPropertyForm';
+import { SectionNav } from './SectionNav';
+import { VersionHistoryDropdown } from './VersionHistoryDropdown';
 import './editor.css';
 
 function SaveStatus({ saving, lastSaved }: { saving: boolean; lastSaved: Date | null }) {
@@ -30,36 +33,12 @@ function Toolbar({ editor }: ToolbarProps) {
   const inactiveClass = 'bg-white text-slate hover:bg-parchment';
 
   const buttons = [
-    {
-      label: 'Bold',
-      action: () => editor.chain().focus().toggleBold().run(),
-      isActive: editor.isActive('bold'),
-    },
-    {
-      label: 'Italic',
-      action: () => editor.chain().focus().toggleItalic().run(),
-      isActive: editor.isActive('italic'),
-    },
-    {
-      label: 'H1',
-      action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-      isActive: editor.isActive('heading', { level: 1 }),
-    },
-    {
-      label: 'H2',
-      action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-      isActive: editor.isActive('heading', { level: 2 }),
-    },
-    {
-      label: 'Bullet list',
-      action: () => editor.chain().focus().toggleBulletList().run(),
-      isActive: editor.isActive('bulletList'),
-    },
-    {
-      label: 'Ordered list',
-      action: () => editor.chain().focus().toggleOrderedList().run(),
-      isActive: editor.isActive('orderedList'),
-    },
+    { label: 'Bold', action: () => editor.chain().focus().toggleBold().run(), isActive: editor.isActive('bold') },
+    { label: 'Italic', action: () => editor.chain().focus().toggleItalic().run(), isActive: editor.isActive('italic') },
+    { label: 'H1', action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(), isActive: editor.isActive('heading', { level: 1 }) },
+    { label: 'H2', action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), isActive: editor.isActive('heading', { level: 2 }) },
+    { label: 'Bullet list', action: () => editor.chain().focus().toggleBulletList().run(), isActive: editor.isActive('bulletList') },
+    { label: 'Ordered list', action: () => editor.chain().focus().toggleOrderedList().run(), isActive: editor.isActive('orderedList') },
   ];
 
   return (
@@ -82,6 +61,7 @@ export function EditorPage() {
   const { id } = useParams<{ id: string }>();
   const { data: appraisal, isLoading, error } = useAppraisal(id ?? '');
   const [content, setContent] = useState<JSONContent | undefined>(undefined);
+  const [activeSection, setActiveSection] = useState('subject');
 
   const editor = useEditor(
     {
@@ -127,18 +107,50 @@ export function EditorPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display text-[22px] font-medium text-ink">
-          {appraisal.property_address || 'Untitled appraisal'}
-        </h1>
-        <SaveStatus saving={saving} lastSaved={lastSaved} />
+    <div className="flex gap-6">
+      {/* Section navigation */}
+      <div className="hidden lg:block w-44 shrink-0 pt-2">
+        <SectionNav activeSection={activeSection} onSectionClick={setActiveSection} />
       </div>
 
-      <div className="bg-white border border-fog/20 rounded-[12px] p-8 min-h-[600px]">
-        <Toolbar editor={editor} />
-        <div className="tiptap-editor font-sans text-slate text-base leading-relaxed">
-          <EditorContent editor={editor} />
+      {/* Main editor area */}
+      <div className="flex-1 max-w-3xl">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="font-display text-[22px] font-medium text-ink">
+            {appraisal.property_address || 'Untitled appraisal'}
+          </h1>
+          <div className="flex items-center gap-4">
+            <SaveStatus saving={saving} lastSaved={lastSaved} />
+            <VersionHistoryDropdown appraisalId={id ?? ''} />
+          </div>
+        </div>
+
+        {/* Subject property form */}
+        <div id="section-subject">
+          <SubjectPropertyForm
+            appraisalId={id ?? ''}
+            initialData={{
+              property_address: appraisal.property_address,
+              property_city: appraisal.property_city,
+              property_state: appraisal.property_state,
+              property_zip: appraisal.property_zip,
+              property_type: appraisal.property_type,
+              bedrooms: appraisal.bedrooms,
+              bathrooms: appraisal.bathrooms,
+              gla: appraisal.gla,
+              lot_size: appraisal.lot_size,
+              year_built: appraisal.year_built,
+              condition: appraisal.condition,
+            }}
+          />
+        </div>
+
+        {/* TipTap editor */}
+        <div id="section-neighborhood" className="bg-white border border-fog/20 rounded-[12px] p-8 min-h-[600px]">
+          <Toolbar editor={editor} />
+          <div className="tiptap-editor font-sans text-slate text-base leading-relaxed">
+            <EditorContent editor={editor} />
+          </div>
         </div>
       </div>
     </div>
