@@ -5,7 +5,6 @@ import { AppShell } from '@/components/ui/AppShell';
 import { Dashboard } from '@/features/dashboard/Dashboard';
 import { PropertyInputPage } from '@/pages/PropertyInputPage';
 import { CompSelectionPage } from '@/pages/CompSelectionPage';
-import { ReportsPage } from '@/pages/ReportsPage';
 import { AppraisalsListView } from '@/features/appraisal/AppraisalsListView';
 
 export const router = createBrowserRouter([
@@ -52,7 +51,10 @@ export const router = createBrowserRouter([
           },
           {
             path: 'report/:id?',
-            element: <ReportsPage />,
+            lazy: async () => {
+              const { ReportBuilderPage } = await import('@/pages/ReportBuilderPage');
+              return { Component: ReportBuilderPage };
+            },
           },
         ],
       },
